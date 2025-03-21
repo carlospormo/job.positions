@@ -7,24 +7,22 @@ public class RabbitMqPublisher: IRabbitMqPublisher
 {
     private readonly string _hostName = "localhost";
 
-    public void Publish(string message)
+    public async Task Publish(string message)
     {
         var factory = new ConnectionFactory() { HostName = _hostName };
-        using (var connection = factory.CreateConnection())
-        using (var channel = connection.CreateModel())
-        {
-            channel.QueueDeclare(queue: "positionsQueue",
-                durable: false,
-                exclusive: false,
-                autoDelete: false,
-                arguments: null);
+        using var connection = await factory.CreateConnectionAsync();
+        using var channel = await connection.CreateChannelAsync();
 
-            var body = Encoding.UTF8.GetBytes(message);
+        await channel.QueueDeclareAsync(queue: "positionsQueue",
+            durable: false,
+            exclusive: false,
+            autoDelete: false,
+            arguments: null);
 
-            channel.BasicPublish(exchange: "",
-                routingKey: "positionsQueue",
-                basicProperties: null,
-                body: body);
-        }
+        var body = Encoding.UTF8.GetBytes(message);
+
+        await channel.BasicPublishAsync(exchange: "",
+            routingKey: "positionsQueue",
+            body: body);
     }
 }

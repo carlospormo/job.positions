@@ -53,7 +53,7 @@ const EditPositionPage: React.FC = () => {
   }
 
   return (
-    <div>
+    <div className="container">
       <h1>{id?"Edit":"Create"} Position</h1>
       {position && (
         <Form

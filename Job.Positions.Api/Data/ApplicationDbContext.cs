@@ -1,5 +1,5 @@
 ﻿using Job.Positions.Api.Models;
-using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace Job.Positions.Api.Data;
 

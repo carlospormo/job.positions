@@ -34,6 +34,7 @@ const Form: React.FC<PositionFormProps> = ({ onSubmit }) => {
         Position Number:
         <input
           type="text"
+          class="form-control"
           value={positionNumber}
           onChange={(e) => setPositionNumber(e.target.value)}
           required
@@ -43,6 +44,7 @@ const Form: React.FC<PositionFormProps> = ({ onSubmit }) => {
         Title:
         <input
           type="text"
+          className="form-control"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           required
@@ -52,6 +54,7 @@ const Form: React.FC<PositionFormProps> = ({ onSubmit }) => {
         Budget:
         <input
           type="number"
+          className="form-control"
           value={budget}
           onChange={(e) => setBudget(Number(e.target.value))}
           required
@@ -61,6 +64,7 @@ const Form: React.FC<PositionFormProps> = ({ onSubmit }) => {
         Department:
         <input
           type="text"
+          className="form-control"
           value={budget}
           onChange={(e) => setDepartment(e.target.value)}
           required
@@ -70,12 +74,13 @@ const Form: React.FC<PositionFormProps> = ({ onSubmit }) => {
         Status:
         <input
           type="text"
+          className="form-control"
           value={budget}
           onChange={(e) => setStatus(e.target.value)}
           required
         />
       </label>
-      <button type="submit">Submit</button>
+      <button type="submit" className="btn btn-primary">Submit</button>
     </form>
   );
 };

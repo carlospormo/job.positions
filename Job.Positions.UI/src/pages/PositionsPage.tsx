@@ -52,7 +52,7 @@ const PositionsPage: React.FC = () => {
     };
 
     return (
-        <div>
+        <div class="container">
             <h1>Job Positions</h1>
             <input
                 type="text"

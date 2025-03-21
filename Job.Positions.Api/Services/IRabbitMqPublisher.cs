@@ -2,5 +2,5 @@
 
 public interface IRabbitMqPublisher
 {
-    void Publish(string message);
+    Task Publish(string message);
 }

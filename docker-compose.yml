@@ -1,10 +1,9 @@
-﻿version: "3.8"
-services:
+﻿services:
   ui:
     build:
       context: ./Job.Positions.UI
       dockerfile: Dockerfile
-      ports:
+    ports:
       - "3000:3000"
       
   api:
@@ -13,11 +12,12 @@ services:
       dockerfile: Dockerfile
     ports:
       - "5000:5000"
+      - "5001:5001"
     depends_on:
       - rabbitmq
 
   rabbitmq:
-    image: "rabbitmq:3-management"
+    image: "rabbitmq:4.0-management"
     ports:
       - "5672:5672"
       - "15672:15672"

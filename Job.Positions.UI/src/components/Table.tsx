@@ -1,4 +1,5 @@
 import React from "react";
+import { Position } from "../types/position";
 
 interface TableProps {
   positions: Position[];
@@ -7,7 +8,7 @@ interface TableProps {
 }
 
 const Table: React.FC<TableProps> = ({ positions, onEdit, onDelete }) => (
-  <table>
+  <table className="table">
     <thead>
       <tr>
         <th>Position Number</th>
