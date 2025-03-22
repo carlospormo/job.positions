@@ -1,12 +1,14 @@
-﻿namespace Job.Positions.Api.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Job.Positions.Api.Models;
 
 public class Position
 {
-    public int PositionID { get; set; }
-    public string PositionNumber { get; set; }
+    [Key] 
+    public int PositionNumber { get; set; }
     public string Title { get; set; }
-    public int StatusID { get; set; }
-    public int DepartmentID { get; set; }
-    public int RecruiterID { get; set; }
+    public int StatusId { get; set; }
+    public int DepartmentId { get; set; }
+    public int RecruiterId { get; set; }
     public decimal Budget { get; set; }
 }

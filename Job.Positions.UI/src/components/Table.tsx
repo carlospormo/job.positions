@@ -1,10 +1,10 @@
 import React from "react";
-import { Position } from "../types/position";
+import { departments, Position, statuses } from "../types/position";
 
 interface TableProps {
   positions: Position[];
-  onEdit: (id: string) => void;
-  onDelete: (id: string) => void;
+  onEdit: (id: number) => void;
+  onDelete: (id: number) => void;
 }
 
 const Table: React.FC<TableProps> = ({ positions, onEdit, onDelete }) => (
@@ -24,12 +24,12 @@ const Table: React.FC<TableProps> = ({ positions, onEdit, onDelete }) => (
         <tr key={position.positionNumber}>
           <td>{position.positionNumber}</td>
           <td>{position.title}</td>
-          <td>{position.status}</td>
-          <td>{position.department}</td>
+          <td>{statuses.find(x=>x.id===position.statusId)?.name}</td>
+          <td>{departments.find(x=>x.id===position.departmentId)?.name}</td>
           <td>{position.budget}</td>
           <td>
-            <button onClick={() => onEdit(position.positionNumber)}>Edit</button>
-            <button onClick={() => onDelete(position.positionNumber)}>Delete</button>
+            <button onClick={() => onEdit(position.positionNumber)} className="btn btn-success">Edit</button>
+            <button onClick={() => onDelete(position.positionNumber)} className="btn btn-warning">Delete</button>
           </td>
         </tr>
       ))}

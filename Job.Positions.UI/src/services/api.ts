@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://localhost:5001/api",
+  baseURL: "https://localhost:7087/api",
 });
 
 export const getPositions = async () => {
@@ -9,18 +9,14 @@ export const getPositions = async () => {
   return response.data;
 };
 
-export const createPosition = async (position: {
-  positionNumber: string;
-  title: string;
-  budget: number;
-}) => {
+export const createPosition = async (position: any) => {
   return await api.post("/positions", position);
 };
 
-export const updatePosition = async (id: string, position: any) => {
+export const updatePosition = async (id: number, position: any) => {
   return await api.put(`/positions/${id}`, position);
 };
 
-export const deletePosition = async (id: string) => {
+export const deletePosition = async (id: number) => {
   return await api.delete(`/positions/${id}`);
 };

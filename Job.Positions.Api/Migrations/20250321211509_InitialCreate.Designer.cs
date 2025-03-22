@@ -28,17 +28,17 @@ namespace Job.Positions.Api.Migrations
                     b.Property<decimal>("Budget")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("DepartmentID")
+                    b.Property<int>("DepartmentId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("PositionNumber")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("RecruiterID")
+                    b.Property<int>("RecruiterId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("StatusID")
+                    b.Property<int>("StatusId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Title")

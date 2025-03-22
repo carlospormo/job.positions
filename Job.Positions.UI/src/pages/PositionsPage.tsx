@@ -32,7 +32,7 @@ const PositionsPage: React.FC = () => {
         setFilteredPositions(filtered);
     };
 
-    const handleDelete = async (id: string) => {
+    const handleDelete = async (id: number) => {
         if (window.confirm("Are you sure you want to delete this position?")) {
             try {
             await deletePosition(id);
@@ -47,15 +47,16 @@ const PositionsPage: React.FC = () => {
         }
     };
 
-    const handleEdit = (id: string) => {
+    const handleEdit = (id: number) => {
         navigate(`/edit/${id}`);
     };
 
     return (
-        <div class="container">
+        <div className="container">
             <h1>Job Positions</h1>
             <input
                 type="text"
+				className="form-control"
                 placeholder="Search by title..."
                 value={searchQuery}
                 onChange={(e) => handleSearch(e.target.value)}
@@ -65,7 +66,7 @@ const PositionsPage: React.FC = () => {
                 onEdit={handleEdit}
                 onDelete={handleDelete}
             />
-            <button onClick={() => navigate("/create")}>Create New Position</button>
+            <button onClick={() => navigate("/create")} className="btn btn-primary">Create New Position</button>
         </div>
     );
 };

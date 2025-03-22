@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getPositions, updatePosition } from "../services/api";
+import { createPosition, getPositions, updatePosition } from "../services/api";
 import Form from "../components/Form";
 import { createDefaultPosition, Position } from "../types/position";
 
@@ -16,7 +16,7 @@ const EditPositionPage: React.FC = () => {
       try {
         if(id){
             const data = await getPositions();
-            const selectedPosition = data.find((p: Position) => p.positionNumber === id);
+            const selectedPosition = data.find((p: Position) => p.positionNumber === parseInt(id));
             if (selectedPosition) {
             setPosition(selectedPosition);
             } else {
@@ -36,8 +36,13 @@ const EditPositionPage: React.FC = () => {
 
   const handleSubmit = async (updatedPosition: Position) => {
     try {
-      await updatePosition(id!, updatedPosition);
-      alert("Position updated successfully!");
+      if(id){
+        await updatePosition(parseInt(id), updatedPosition);
+        alert("Position updated successfully!");
+      } else {
+        await createPosition(updatedPosition);
+        alert("Position created successfully!");
+      }
       navigate("/");
     } catch (err) {
       alert("Failed to update position. Please try again.");

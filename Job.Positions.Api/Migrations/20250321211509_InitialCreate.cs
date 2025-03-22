@@ -14,18 +14,17 @@ namespace Job.Positions.Api.Migrations
                 name: "Positions",
                 columns: table => new
                 {
-                    PositionID = table.Column<int>(type: "INTEGER", nullable: false)
+                    PositionNumber = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    PositionNumber = table.Column<string>(type: "TEXT", nullable: false),
                     Title = table.Column<string>(type: "TEXT", nullable: false),
-                    StatusID = table.Column<int>(type: "INTEGER", nullable: false),
-                    DepartmentID = table.Column<int>(type: "INTEGER", nullable: false),
-                    RecruiterID = table.Column<int>(type: "INTEGER", nullable: false),
+                    StatusId = table.Column<int>(type: "INTEGER", nullable: false),
+                    DepartmentId = table.Column<int>(type: "INTEGER", nullable: false),
+                    RecruiterId = table.Column<int>(type: "INTEGER", nullable: false),
                     Budget = table.Column<decimal>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Positions", x => x.PositionID);
+                    table.PrimaryKey("PK_Positions", x => x.PositionNumber);
                 });
         }
 

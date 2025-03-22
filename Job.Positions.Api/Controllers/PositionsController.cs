@@ -38,7 +38,7 @@ public class PositionsController : ControllerBase
         // Publish message
         _publisher.Publish($"Position created: {position.Title}");
 
-        return CreatedAtAction(nameof(GetPositions), new { id = position.PositionID }, position);
+        return CreatedAtAction(nameof(GetPositions), new { id = position.PositionNumber }, position);
     }
 
     [HttpPut("{id}")]
@@ -50,6 +50,9 @@ public class PositionsController : ControllerBase
 
         existingPosition.Title = position.Title;
         existingPosition.Budget = position.Budget;
+        existingPosition.RecruiterId = position.RecruiterId;
+        existingPosition.DepartmentId = position.DepartmentId;
+        existingPosition.StatusId = position.StatusId;
         _context.SaveChanges();
         return NoContent();
     }
