@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { getPositions, deletePosition } from "../services/api";
 import Table from "../components/Table";
 import { Position } from "../types/position";
+import * as signalR from "@microsoft/signalr";
 
 const PositionsPage: React.FC = () => {
     const [positions, setPositions] = useState<Position[]>([]);
@@ -11,16 +12,33 @@ const PositionsPage: React.FC = () => {
     const navigate = useNavigate();
   
     useEffect(() => {
-      const fetchPositions = async () => {
+        const connection = new signalR.HubConnectionBuilder()
+            .configureLogging(signalR.LogLevel.Information)
+            .withUrl("http://localhost:8080/positionsHub")
+            .withAutomaticReconnect()
+            .build();
+
+        connection.start().then(() => {
+            console.log("Connected to SignalR Hub");            
+        });
+
+        connection.on("ReceiveUpdate", (message) => {
+            console.log("Update received: ", message);
+            fetchPositions();
+        });
+    }, []);
+
+    const fetchPositions = async () => {
         try {
           const data = await getPositions();
           setPositions(data);
-          setFilteredPositions(data); // Initialize with all positions
+          setFilteredPositions(data);
         } catch (error) {
           alert("Failed to fetch positions.");
         }
-      };
-  
+    };
+
+    useEffect(() => {
       fetchPositions();
     }, []);
 

@@ -36,7 +36,7 @@ public class PositionsController : ControllerBase
         _context.SaveChanges();
 
         // Publish message
-        _publisher.Publish($"Position created: {position.Title}");
+        _publisher.Publish($"Position created: {position.PositionNumber}");
 
         return CreatedAtAction(nameof(GetPositions), new { id = position.PositionNumber }, position);
     }
@@ -54,6 +54,7 @@ public class PositionsController : ControllerBase
         existingPosition.DepartmentId = position.DepartmentId;
         existingPosition.StatusId = position.StatusId;
         _context.SaveChanges();
+        _publisher.Publish($"Position updated: {position.PositionNumber}");
         return NoContent();
     }
 

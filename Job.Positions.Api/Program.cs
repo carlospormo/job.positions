@@ -1,4 +1,5 @@
 using Job.Positions.Api.Data;
+using Job.Positions.Api.Hubs;
 using Job.Positions.Api.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,29 +11,34 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite("Data Source=positions.db"));
-builder.Services.AddSingleton<IRabbitMqPublisher, RabbitMqPublisher>();
-builder.Services.AddCors(opt =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddTransient<IRabbitMqPublisher, RabbitMqPublisher>();
+builder.Services.AddTransient<IRabbitMqConsumer, RabbitMqConsumer>();
+builder.Services.AddCors(options =>
 {
-    opt.AddDefaultPolicy(policy =>
+    options.AddDefaultPolicy(corsPolicyBuilder =>
     {
-        policy.AllowAnyOrigin()
-        .AllowAnyMethod()
-        .AllowAnyHeader();
+        corsPolicyBuilder
+            .WithOrigins(builder.Configuration["FrontEndUrl"])
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
 });
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
-app.UseCors();
+app.UseRouting();
+app.UseCors(); 
+app.MapHub<PositionsHub>("/positionsHub");
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+using var scope = app.Services.CreateScope();
+var rabbitMqConsumer = scope.ServiceProvider.GetRequiredService<IRabbitMqConsumer>();
+rabbitMqConsumer.StartConsuming();
 
-app.UseHttpsRedirection();
+app.UseSwagger();
+app.UseSwaggerUI();
+
 app.MapControllers();
 app.Run();

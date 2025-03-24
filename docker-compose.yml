@@ -1,23 +1,44 @@
 ﻿services:
-  ui:
-    build:
-      context: ./Job.Positions.UI
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-      
   api:
     build:
       context: ./Job.Positions.Api
       dockerfile: Dockerfile
     ports:
-      - "5000:5000"
-      - "5001:5001"
+      - "8080:8080" # HTTP
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Production"
+      ConnectionStrings__DefaultConnection: "Data Source=/app/positions.db"
+      RABBITMQ_HOST: localhost
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: guest
+      RABBITMQ_PASSWORD: guest
+      FrontEndUrl: "http://localhost:3000"
     depends_on:
       - rabbitmq
+    networks:
+      - app-network
+    volumes:
+      - ./Job.Positions.Api/positions.db:/app/positions.db
+
+  ui:
+    build:
+      context: ./Job.Positions.UI # React app folder
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000" # Map the React app to port 3000 locally
+    depends_on:
+      - api
+    networks:
+      - app-network
 
   rabbitmq:
-    image: "rabbitmq:4.0-management"
+    image: "rabbitmq:management"
+    networks:
+      - app-network
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - "5672:5672"   # RabbitMQ main communication port
+      - "15672:15672" # RabbitMQ management UI
+      
+networks:
+  app-network:
+    driver: bridge
