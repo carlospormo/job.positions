@@ -5,24 +5,25 @@ namespace Job.Positions.Api.Services;
 
 public class RabbitMqPublisher: IRabbitMqPublisher
 {
-    private readonly IConfiguration _config;
+    private readonly Task<IChannel> _channelTask;
 
     public RabbitMqPublisher(IConfiguration config)
     {
-        _config = config;
+        var factory = new ConnectionFactory
+        {
+            HostName = config["RABBITMQ_HOST"],
+            Port = Convert.ToInt32(config["RABBITMQ_PORT"]),
+            UserName = config["RABBITMQ_USER"],
+            Password = config["RABBITMQ_PASSWORD"]
+        };
+
+        var connectionAsync = factory.CreateConnectionAsync();
+        _channelTask = connectionAsync.ContinueWith(task => task.Result.CreateChannelAsync()).Unwrap();
     }
 
     public async Task Publish(string message)
     {
-        var factory = new ConnectionFactory
-        {
-            HostName = _config["RABBITMQ_HOST"],
-            Port = Convert.ToInt32(_config["RABBITMQ_PORT"]),
-            UserName = _config["RABBITMQ_USER"],
-            Password = _config["RABBITMQ_PASSWORD"]
-        };
-        await using var connection = await factory.CreateConnectionAsync();
-        await using var channel = await connection.CreateChannelAsync();
+        var channel = await _channelTask;
 
         await channel.QueueDeclareAsync(queue: "positions_queue",
             durable: false,

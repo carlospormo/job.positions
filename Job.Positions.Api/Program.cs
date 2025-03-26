@@ -12,8 +12,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddTransient<IRabbitMqPublisher, RabbitMqPublisher>();
-builder.Services.AddTransient<IRabbitMqConsumer, RabbitMqConsumer>();
+builder.Services.AddSingleton<IRabbitMqPublisher, RabbitMqPublisher>();
+builder.Services.AddSingleton<IRabbitMqConsumer, RabbitMqConsumer>();
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(corsPolicyBuilder =>
@@ -35,7 +35,7 @@ app.MapHub<PositionsHub>("/positionsHub");
 
 using var scope = app.Services.CreateScope();
 var rabbitMqConsumer = scope.ServiceProvider.GetRequiredService<IRabbitMqConsumer>();
-rabbitMqConsumer.StartConsuming();
+await rabbitMqConsumer.StartConsuming();
 
 app.UseSwagger();
 app.UseSwaggerUI();

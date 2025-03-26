@@ -14,7 +14,8 @@
       RABBITMQ_PASSWORD: guest
       FrontEndUrl: "http://localhost:3000"
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
     networks:
       - app-network
     volumes:
@@ -38,6 +39,11 @@
     ports:
       - "5672:5672"   # RabbitMQ main communication port
       - "15672:15672" # RabbitMQ management UI
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
       
 networks:
   app-network:

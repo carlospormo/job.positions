@@ -67,6 +67,9 @@ public class PositionsController : ControllerBase
 
         _context.Positions.Remove(position);
         _context.SaveChanges();
+
+        _publisher.Publish($"Position deleted: {position.PositionNumber}");
+
         return NoContent();
     }
 }
